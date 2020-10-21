@@ -35,9 +35,11 @@ class Node:
 #Put
 #Get
 #MaxKey/MinKey
+#Min
 #Select
 #Rank
 #Delete
+#DeleteMin
 class BST:
 	root = None
 
@@ -63,7 +65,7 @@ class BST:
 	def Graphy(self):
 		dict = {}
 		self._graphy(dict, self.root, 0)
-		print("floor: ",len(dict))
+		print("-------------------------------Graphy-------------------------------")
 		for floor in dict.keys():
 			vfloor = dict[floor]
 			keys = vfloor.keys()
@@ -87,6 +89,13 @@ class BST:
 			node = node.lnode
 		return node and node.key or None
 
+	#子树的最小节点
+	def Min(self, i_node):
+		node = i_node
+		while node.lnode != None:
+			node = node.lnode
+		return node 
+
 	#选取排名的值
 	def Select(self, rank):
 		node = self._select(self.root, rank)
@@ -99,13 +108,10 @@ class BST:
 
 	#删除
 	def Delete(self, key):
-		#找到要删除的节点
-		#删除这个节点的最小节点
-		#替换当前节点为这个最小节点
-		
+		self.root = self._delete(self.root, key)
 
 	def DeleteMin(self):
-		self._deleteMin(self.root)
+		self.root = self._deleteMin(self.root)
 
 	def _rank(self, node, key):
 		if node == None:
@@ -204,6 +210,30 @@ class BST:
 		node.size = self.size(node.lnode) + self.size(node.rnode) + 1
 		return node
 
+	def _delete(self, node, key):
+		if node == None:
+			return None
+		
+		if key < node.key:
+			#左子树遍历
+			node.lnode = self._delete(node.lnode, key)
+		elif key > node.key:
+			#右子树遍历
+			node.rnode = self._delete(node.rnode, key)
+		else:
+			if node.lnode == None:
+				return node.rnode
+			elif node.rnode == None:
+				return node.lnode
+			else:
+				tmpNode = self.Min(node.rnode)
+				tmpNode.rnode = self._deleteMin(node.rnode)
+				tmpNode.lnode = node.lnode
+			node = tmpNode
+
+		node.size = self.size(node.lnode) + self.size(node.rnode) + 1
+		return node
+
 
 	def size(self, node):
 		if node == None:
@@ -248,6 +278,12 @@ print("\t dee200 rank=",  tree.Rank("dee200"))
 print("\t dee300 rank=",  tree.Rank("dee300"))
 
 
-print("\n:> DeleteMin")
-tree.DeleteMin()
+# print("\n:> DeleteMin")
+# tree.DeleteMin()
+tree.Graphy()
+print("\n:> Delete dee300")
+tree.Delete("dee300")
+tree.Graphy()
+print("\n:> Delete dee001")
+tree.Delete("dee001")
 tree.Graphy()
