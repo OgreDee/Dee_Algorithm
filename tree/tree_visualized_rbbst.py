@@ -11,26 +11,33 @@ class TreeVisualized():
 	color="#B4E7B7"
 	color_black="#000000"
 	color_gray="#999999"
+	color_red="#FF0000"
+
+	def GetColor(self, node):
+		if node.color:
+			return self.color_red
+		else:
+			return self.color_black
 
 	def addNode(self, node):
 		if node.lnode != None:
-			self.G.add_node(str(node.lnode.value), style=self.style, shape=self.shape, color=self.color)
-			self.G.add_edge(str(node.value), str(node.lnode.value), color="#B4DBFF", penwidth=1.5)
+			self.G.add_node(node.lnode.key, style=self.style, shape=self.shape, color=self.color)
+			self.G.add_edge(node.key, node.lnode.key, color=self.GetColor(node.lnode), penwidth=5)
 			self.addNode(node.lnode)	
 		elif node.rnode != None:
-			nullName = str(node.value) +"L"
+			nullName = str(node.key) +"L"
 			self.G.add_node(nullName, style=self.style, shape=self.shape, color=self.color_black)
-			self.G.add_edge(str(node.value), nullName, color=self.color_gray, penwidth=0.5)	
+			self.G.add_edge(node.key, nullName, color=self.color_gray, penwidth=0.5)	
 			
 
 		if node.rnode != None:
-			self.G.add_node(str(node.rnode.value), style=self.style, shape=self.shape, color=self.color)
-			self.G.add_edge(str(node.value), str(node.rnode.value), color="#B4DBFF", penwidth=1.5)
+			self.G.add_node(str(node.rnode.key), style=self.style, shape=self.shape, color=self.color)
+			self.G.add_edge(str(node.key), str(node.rnode.key), color=self.GetColor(node.rnode), penwidth=5)
 			self.addNode(node.rnode)
 		elif node.lnode != None:
-			nullName = str(node.value) +"R"
+			nullName = str(node.key) +"R"
 			self.G.add_node(nullName, style=self.style, shape=self.shape, color=self.color_black)
-			self.G.add_edge(str(node.value),nullName, color=self.color_gray, penwidth=0.5)	
+			self.G.add_edge(str(node.key),nullName, color=self.color_gray, penwidth=0.5)	
 
 
 	def printf(self,treeRoot, fileName):
@@ -38,7 +45,7 @@ class TreeVisualized():
 			return
 
 		self.G = pgv.AGraph(directed=True, rankdir="TB")
-		self.G.add_node(str(treeRoot.value), style=self.style, shape=self.shape, color=self.color)
+		self.G.add_node(str(treeRoot.key), style=self.style, shape=self.shape, color=self.color)
 
 		self.addNode(treeRoot)	
 

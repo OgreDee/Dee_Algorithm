@@ -1,3 +1,4 @@
+#--encoding:utf-8--
 from tree_visualized import TreeVisualized 
 
 class Node:
@@ -71,7 +72,7 @@ class BST:
 
 	#图形
 	def Graphy(self, outName):
-		self.visualizer.print(tree.root, outName)
+		self.visualizer.printf(tree.root, outName)
 		
 
 	#最大键
@@ -218,25 +219,38 @@ class BST:
 
 print("---------------------二叉查找树(BinarySearchTree)---------------------")
 tree = BST()
-tree.Put(100)
-tree.Put(300)
-tree.Put(10)
-tree.Put(200)
-tree.Put(3001)
+# tree.Put(100)
+# tree.Put(300)
+# tree.Put(10)
+# tree.Put(200)
+# tree.Put(3001)
+# tree.Put(1)
+# tree.Put(40)
+# tree.Put(14)
+# tree.Put(89)
+# tree.Put(3)
+# tree.Put(1099)
+# tree.Put(300)
+
 tree.Put(1)
-tree.Put(40)
-tree.Put(14)
-tree.Put(89)
+tree.Put(2)
 tree.Put(3)
+tree.Put(4)
+tree.Put(5)
+tree.Put(6)
+tree.Put(7)
+tree.Put(8)
+tree.Put(9)
+tree.Put(30)
 tree.Put(1099)
-tree.Put(300)
+tree.Put(3000)
 
 
 tree.Graphy("g_tree")
-tree.Delete(formatInterge(10))
-tree.Graphy("delete_300")
+# tree.Delete(formatInterge(300))
+# tree.Graphy("delete_300")
 
-print(":> Find 30 : " + str(tree.Get(formatInterge(200))))
-print(":> Rank 30 : " + str(tree.Rank(formatInterge(200))))
+# print(":> Find 30 : " + str(tree.Get(formatInterge(200))))
+# print(":> Rank 30 : " + str(tree.Rank(formatInterge(200))))
 
 # tree.Graphy()
