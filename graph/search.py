@@ -13,6 +13,21 @@ str_graph = "7\n\
 3-4\n\
 3-5"
 
+str_graph_cc = "13\n\
+13\n\
+0-5\n\
+0-1\n\
+0-2\n\
+0-6\n\
+5-3\n\
+5-4\n\
+3-4\n\
+4-6\n\
+7-8\n\
+9-10\n\
+9-11\n\
+9-12\n\
+11-12"
 
 
 
@@ -74,6 +89,8 @@ class DFS(Search):
 					break
 			stack.pop()
 
+		
+
 
 #广度优先遍历
 class BFS(Search):
@@ -85,7 +102,6 @@ class BFS(Search):
 		self.bfs(graph, s)
 
 	def bfs(self, graph, s):
-		print("bfs....")
 		queue = Queue()
 		queue.put(s)
 		self.mark(s)
@@ -108,15 +124,58 @@ class BFS(Search):
 		print("->".join([str(x) for x in l]))
 		
 
+class ConnectedComponent(Search):
+	#顶点对应的连通分量的id
+	id = None
+	#id计数
+	idTime = 0
+	def __init__(self, graph):
+		super(ConnectedComponent, self).__init__(graph, 0)
+		self.id = [0 for i in range(graph.V())]
+		self.idTime = 0
+		for v in range(1, graph.V()):
+			if not self.beMarked(v):
+				self.dfs_recursion(v)
+				self.idTime = self.idTime + 1
+		
+	#递归式
+	def dfs_recursion(self, v):
+		# print(v)
+		self.marked[v] = True
+		self.id[v] = self.idTime
+		# print(str(v)+ " : " + str(self.idTime))
+		for node in self.graph.arr_adj[v]:
+			if not self.beMarked(node.value):
+				self.dfs_recursion(node.value)
+
+	def beConnected(self, v, w):
+		return self.ID(v) == self.ID(w)
+
+	def ID(self, v):
+		return self.id[v]
+
+	def count(self):
+		return self.idTime
+
 
 def main():
 	graph = Graph(str_graph)
 	graph.Printf("default")
+
+	print("dfs...........")
 	search = DFS(graph, 0)
 	search.dfs_stack(0)
 
+	print("bfs...........")
 	bfs = BFS(graph, 0)
 	bfs.path(4)
+
+	print("cc............")
+	graphCC = Graph(str_graph_cc)
+	cc = ConnectedComponent(graphCC)
+	graphCC.Printf("graph_cc")
+	print("cc count: "+str(cc.count()))
+	print("4 connect 10: " + str(cc.beConnected(4, 10)))
 
 
 if __name__ == '__main__':
