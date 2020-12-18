@@ -37,5 +37,5 @@ class Graph(object):
 		return self.num_edgeCnt
 
 	def Printf(self, fileName):
-		TreeVisualized().printf(self, fileName)
+		TreeVisualized(False).printf(self, fileName)
 

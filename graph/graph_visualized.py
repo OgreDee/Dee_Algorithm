@@ -11,6 +11,11 @@ class TreeVisualized():
 	color="#B4E7B7"
 	color_black="#000000"
 	color_gray="#999999"
+	directed = False
+
+	def __init__(self, directed=False):
+		super(TreeVisualized, self).__init__()
+		self.directed = directed
 
 	def addNodes(self, count):
 		for x in range(0,count):
@@ -26,7 +31,7 @@ class TreeVisualized():
 		if fileName == None:
 			return
 
-		self.G = pgv.AGraph(directed=False, rankdir="TB")
+		self.G = pgv.AGraph(directed=self.directed, rankdir="TB")
 
 		self.addNodes(graph.V())	
 		self.addEdges(graph.arr_adj)	
