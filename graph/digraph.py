@@ -73,11 +73,11 @@ class DigraphSearch(object):
 
 class DigraphDFS(DigraphSearch):
 	def __init__(self, digraph, s):
-		super(DigraphDFS, self).__init__(digraph, s)
+		super(DigraphDFS, self).__init__(digraph)
 		self.dfs(s)
 	
 	def dfs(self, v):
-		print(v)
+		# print(v)
 		self.mark(v)
 		for next in self.graph.adj(v):
 			if not self.beMarked(next.value):
@@ -180,6 +180,19 @@ class Topologicl(object):
 		return self.order != None
 
 
+#顶点可达性, 预处理所有顶点的可达信息，查询常数耗时
+class TransitiveCluster(object):
+	#预处理所有点的可达信息
+	all = None
+	def __init__(self, digraph):
+		self.all = [None for i in range(digraph.V())]
+		super(TransitiveCluster, self).__init__()
+		for v in range(digraph.V()):
+			self.all[v] = DigraphDFS(digraph, v)
+
+	def reachable(self, v, w):
+		return self.all[v].beMarked(w)
+
 #---------------------------Test--------------------------------
 str_graph = "6\n\
 0-1\n\
@@ -210,17 +223,21 @@ str_graph_order="13\n\
 6-4"
 
 def main():
-	# digraph = Digraph(str_graph)
-	# digraph.Printf("digraph_default")
-	# dfs = DigraphDFS(digraph, 0)
-	# cycle = DirectedCycle(digraph, 5)
-	# print("DAG: "+ str(cycle.isDAG()))
+	digraph = Digraph(str_graph)
+	digraph.Printf("digraph_default")
+	dfs = DigraphDFS(digraph, 0)
+	cycle = DirectedCycle(digraph)
+	print("DAG: "+ str(cycle.isDAG()))
 
 	digraphOrder = Digraph(str_graph_order)
 	order = DepthFirstOrder(digraphOrder)
 	digraphOrder.Printf("digraph_order")
 	topologicl = Topologicl(digraphOrder)
 	print("topologicl: " + str(topologicl.Order()))
+
+	transitiveCluster = TransitiveCluster(digraphOrder)
+	print("2->6, reachable: "+ str(transitiveCluster.reachable(2, 6)))
+	print("6->2, reachable: "+ str(transitiveCluster.reachable(6, 2)))
 
 	pass
 
