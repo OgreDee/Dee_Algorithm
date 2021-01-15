@@ -4,6 +4,9 @@
 from bag import Bag
 from graph_visualized import EdgeDigraphVisualized 
 
+#无效的float
+Infinity   = float("inf")
+
 
 class DirectedEdge(object):
     _from = None
@@ -75,38 +78,80 @@ class EdgeWeightDigraph(object):
         pass
 
 
-class SP(object):
+#迪杰斯特拉算法(贪心算法)
+class DijkstraSP(object):
+    #加权有向图
     digraph = None
+    #起点
     s = None
+    #父链接数组(edgeTo[V],连接v和它的父节点的边, 假如v是终点, edgeTo[v]就是最后一条边)
+    _edgeTo = None
+    #到起点的距离
+    _distTo = None
+    #优先队列
+    _pq = None
 
     def __init__(self, digraph, s):
-        super(SP, self).__init__()
+        super(DijkstraSP, self).__init__()
         self.digraph = digraph
         self.s = s
+        self._edgeTo = [None for i in range(digraph.V())]
+        self._distTo = [Infinity for i in range(digraph.V())]
+        self._distTo[s] = 0
+        self._pq = []
+        self._pq.append(s)
+        while len(self._pq) > 0:
+            top = self._pq[0]
+            self._pq.pop(0)
+            self.relax(digraph, top)
+            pass
+
+    def relax(self, G, V):
+        for bag in G.adj(V):
+            edge = bag.value 
+            w = edge.toV()
+            if self.distTo(w) > self.distTo(V) + edge.weight():
+                #放松边
+                self._distTo[w] = self.distTo(V) + edge.weight()
+                self._edgeTo[w] = edge
+                #
+                if w in self._pq:
+                    #交换,降低优先级
+                    wIdx = self._pq.index(w)
+                    toIdx = self._pq.pop(wIdx)
+                    self._pq.append(w)
+                else:
+                    #插入
+                    self._pq.append(w)
+
 
     def distTo(self, v):
-        pass
+        return self._distTo[v]
 
     def hasPathTo(self, v):
-        pass
+        return v < len(self._distTo) and self._distTo[v] < Infinity
 
-    def pathTo(v):
-        pass
-        
+    def pathTo(self, v):
+        p = []
+        p.append(v)
+        while v != self.s and self._edgeTo[v] != None:
+            v = self._edgeTo[v].fromV()
+            p.append(v)
+        p.reverse()
+        return '->'.join([str(x) for x in p])
 
 
 #--------------------------------test-------------------------------------
 str_digraph = "8\n\
 4-5-0.35\n\
+5-4-0.35\n\
 4-7-0.37\n\
 5-7-0.28\n\
-0-7-0.16\n\
-1-5-0.32\n\
+7-5-0.28\n\
+5-1-0.32\n\
 0-4-0.38\n\
-2-3-0.17\n\
-1-7-0.19\n\
 0-2-0.26\n\
-1-2-0.36\n\
+7-3-0.39\n\
 1-3-0.29\n\
 2-7-0.34\n\
 6-2-0.40\n\
@@ -116,6 +161,10 @@ str_digraph = "8\n\
 
 
 
+
 if __name__ == '__main__':
     digraph = EdgeWeightDigraph(intext = str_digraph)
-    digraph.Printf("shortest")
+    # digraph.Printf("shortest")
+    dijkstraSP = DijkstraSP(digraph, 0)
+    print(dijkstraSP.hasPathTo(6))
+    print(dijkstraSP.pathTo(6))
