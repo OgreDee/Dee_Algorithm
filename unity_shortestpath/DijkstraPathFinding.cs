@@ -90,6 +90,13 @@ public class DijkstraPathFinding
         Debug.Log("构建完毕");
     }
 
+    bool IsBlock(Vector2Int p1, CellStatus[,] cells)
+    {
+        if (p1.x < 0 || p1.x >= mMapWidth) return false;
+        if (p1.y < 0 || p1.y >= mMapHeight) return false;
+
+        return cells[p1.x, p1.y] == CellStatus.Obstacle;
+    }
 
     //  5   6   7
     //  3   P   4
@@ -103,7 +110,11 @@ public class DijkstraPathFinding
         //0
         cp.x = pos.x - 1;
         cp.y = pos.y - 1;
-        Relax(pIdx, 14, cp, ref width, ref height, cells);
+        bool isBlock = IsBlock(new Vector2Int(pos.x - 1, pos.y), cells) || IsBlock(new Vector2Int(pos.x, pos.y - 1), cells);
+        if(!isBlock)
+        {
+            Relax(pIdx, 14, cp, ref width, ref height, cells);
+        }
 
         //1
         cp.x = pos.x;
@@ -113,7 +124,11 @@ public class DijkstraPathFinding
         //2
         cp.x = pos.x + 1;
         cp.y = pos.y - 1;
-        Relax(pIdx, 14, cp, ref width, ref height, cells);
+        isBlock = IsBlock(new Vector2Int(pos.x + 1, pos.y), cells) || IsBlock(new Vector2Int(pos.x, pos.y - 1), cells);
+        if (!isBlock)
+        {
+            Relax(pIdx, 14, cp, ref width, ref height, cells);
+        }
 
         //3
         cp.x = pos.x - 1;
@@ -127,7 +142,11 @@ public class DijkstraPathFinding
         //5
         cp.x = pos.x - 1;
         cp.y = pos.y + 1;
-        Relax(pIdx, 14, cp, ref width, ref height, cells);
+        isBlock = IsBlock(new Vector2Int(pos.x - 1, pos.y), cells) || IsBlock(new Vector2Int(pos.x, pos.y + 1), cells);
+        if (!isBlock)
+        {
+            Relax(pIdx, 14, cp, ref width, ref height, cells);
+        }
         //6
         cp.x = pos.x;
         cp.y = pos.y + 1;
@@ -135,7 +154,11 @@ public class DijkstraPathFinding
         //7
         cp.x = pos.x + 1;
         cp.y = pos.y + 1;
-        Relax(pIdx, 14, cp, ref width, ref height, cells);
+        isBlock = IsBlock(new Vector2Int(pos.x + 1, pos.y), cells) || IsBlock(new Vector2Int(pos.x, pos.y + 1), cells);
+        if (!isBlock)
+        {
+            Relax(pIdx, 14, cp, ref width, ref height, cells);
+        }
     }
 
     Queue<Vector2Int> temp = new Queue<Vector2Int>();
